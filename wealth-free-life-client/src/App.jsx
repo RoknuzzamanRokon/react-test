@@ -1,5 +1,6 @@
-const App = () => {
-  return <main className="bg-red-500 min-h-svh">App</main>;
-};
+import MainLayout from "./layout/MainLayout";
 
+const App = () => {
+  return <MainLayout />;
+};
 export default App;
