@@ -2,7 +2,7 @@ import bannerImg from "../assets/images/banner.png";
 
 const Hero = () => {
   return (
-    <main className="section-wrapper min-h-[calc(100dvh-64px)] flex items-center py-10 lg:py-0">
+    <section className="section-wrapper min-h-[calc(100dvh-64px)] flex items-center py-10 lg:py-0">
       <div className="w-full flex items-center justify-between flex-col lg:flex-row gap-5">
         <div className="flex-1 space-y-5">
           <h1>WEALTH FREE LIFE</h1>
@@ -19,7 +19,7 @@ const Hero = () => {
           <img src={bannerImg} alt="Banner Image" />
         </div>
       </div>
-    </main>
+    </section>
   );
 };
 
