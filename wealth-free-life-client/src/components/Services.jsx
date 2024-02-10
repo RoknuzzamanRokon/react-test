@@ -45,7 +45,7 @@ const Services = () => {
   ];
 
   return (
-    <section className="section-wrapper min-h-dvh flex items-center">
+    <section className="section-wrapper min-h-dvh flex items-center py-10 lg:py-0">
       <div className="w-full space-y-10">
         <div className="flex items-center justify-center flex-col space-y-2">
           <h2>

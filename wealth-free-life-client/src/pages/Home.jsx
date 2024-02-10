@@ -1,5 +1,7 @@
 import About from "@/components/About";
 import Hero from "@/components/Hero";
+import Pricings from "@/components/Pricings";
+import RoadMap from "@/components/RoadMap";
 import Services from "@/components/Services";
 
 const Home = () => {
@@ -8,6 +10,8 @@ const Home = () => {
       <Hero />
       <About />
       <Services />
+      <RoadMap />
+      <Pricings />
     </main>
   );
 };

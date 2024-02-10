@@ -9,16 +9,16 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center gap-5">
-        <Link to="/">Services</Link>
-        <Link to="/">Pricing</Link>
+        <Link to="/">Home</Link>
+        <Link to="/">Trading Bot</Link>
+        <Link to="/">Market</Link>
         <Link to="/">Blogs</Link>
-        <Link to="/">About Us</Link>
         <Link to="/">Contact Us</Link>
       </div>
 
-      <div>
-        <Button>Get Started</Button>
-      </div>
+      <Link to="/signin">
+        <Button>Get Start</Button>
+      </Link>
     </nav>
   );
 };
