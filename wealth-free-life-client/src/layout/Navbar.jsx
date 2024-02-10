@@ -1,7 +1,23 @@
 import { Button } from "@/components/ui/button";
+import useToast from "@/hooks/useToast";
+import { AuthContext } from "@/providers/AuthProvider";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
+  const { user, logOut } = useContext(AuthContext);
+  const { showToast } = useToast();
+
+  const handleLogout = () => {
+    logOut()
+      .then(() => {
+        showToast("Logout Successful!");
+      })
+      .catch((err) => {
+        showToast(err.message);
+      });
+  };
+
   return (
     <nav className="section-wrapper py-3 flex items-center justify-between">
       <div>
@@ -14,11 +30,22 @@ const Navbar = () => {
         <Link to="/">Market</Link>
         <Link to="/">Blogs</Link>
         <Link to="/">Contact Us</Link>
+        {user && (
+          <Button onClick={handleLogout} variant="link" size="link">
+            Signout
+          </Button>
+        )}
       </div>
 
-      <Link to="/signin">
-        <Button>Get Start</Button>
-      </Link>
+      {user ? (
+        <Link to="/wallet">
+          <Button className="rounded-full">Wallet</Button>
+        </Link>
+      ) : (
+        <Link to="/signin">
+          <Button className="rounded-full">Get Start</Button>
+        </Link>
+      )}
     </nav>
   );
 };

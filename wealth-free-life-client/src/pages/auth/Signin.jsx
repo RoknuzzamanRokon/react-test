@@ -1,16 +1,39 @@
-import { Button } from "@/components/ui/button";
+import { useContext } from "react";
+import { AuthContext } from "@/providers/AuthProvider";
+import useToast from "@/hooks/useToast";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const Signin = () => {
+  const { signIn } = useContext(AuthContext);
+  const { showToast } = useToast();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location?.state?.from?.pathname || "/";
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
+    const { email, password } = data;
+
+    signIn(email, password)
+      .then(() => {
+        navigate(from, { replace: true });
+        showToast("SignIn successful!");
+        reset();
+      })
+      .catch((err) => {
+        showToast(err.message);
+        console.error(err);
+      });
   };
 
   return (
