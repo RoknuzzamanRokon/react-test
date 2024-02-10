@@ -38,15 +38,15 @@ const Wallet = () => {
   ];
 
   return (
-    <main className="section-wrapper flex flex-col md:flex-row justify-between items-center py-10 lg:py-0 gap-10">
+    <main className="section-wrapper min-h-[calc(100dvh-64px)] flex flex-col lg:flex-row justify-between items-center py-10 lg:py-0 gap-10">
       {/* left side */}
-      <div className="flex-1">
+      <div className="flex-1 w-full">
         {/* first row */}
-        <div className="flex flex-col space-y-5">
-          <h1 className="text-3xl md:text-5xl text-gradient">
+        <div className="flex flex-col space-y-2 mb-5">
+          <h1>
             Send Crypto <br /> across the world
           </h1>
-          <p className="font-light text-base">
+          <p>
             Explore the crypto world. <br /> Buy and sell cryptocurrencies
             easily on Wealth Free Life.
           </p>
@@ -54,7 +54,7 @@ const Wallet = () => {
 
         {/* second row */}
         {!currentAccount && (
-          <Button onClick={connectWallet} className="mt-5">
+          <Button onClick={connectWallet} className="flex items-center gap-1">
             <AiFillPlayCircle />
             Connect Wallet
           </Button>
@@ -65,7 +65,7 @@ const Wallet = () => {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="min-h-[70px] flex justify-center items-center border-[0.5px] rounded border-gray-50 text-sm font-light"
+              className="min-h-[70px] flex justify-center items-center border rounded "
             >
               {feature}
             </div>
@@ -74,9 +74,9 @@ const Wallet = () => {
       </div>
 
       {/* right side */}
-      <div className="flex-1 flex flex-col justify-end items-end gap-10">
+      <div className="flex-1 w-full flex flex-col justify-end items-end gap-10">
         {/* first row */}
-        <div className="flex flex-col justify-between eth-card white-glassmorphism h-40 w-1/2 p-2">
+        <div className="w-[70%] sm:w-1/2 flex flex-col justify-between eth-card white-glassmorphism h-40 p-2">
           {/* first row */}
           <div className="flex justify-between items-start">
             <div className="w-10 h-10 rounded-full border-2 border-white flex justify-center items-center">
@@ -95,7 +95,7 @@ const Wallet = () => {
         </div>
 
         {/* second row */}
-        <div className="p-5 w-full md:w-[70%] flex flex-col items-center blue-glassmorphism">
+        <div className="w-full sm:w-[70%] p-5 flex flex-col items-center shadow-md rounded-md border space-y-3">
           <Input
             placeholder="Address To"
             name="addressTo"
@@ -121,12 +121,12 @@ const Wallet = () => {
             handleChange={handleChange}
           />
 
-          <div className="h-[1px] w-full bg-gray-50 my-2" />
-
           {isLoading ? (
             <Loader />
           ) : (
-            <Button onClick={handleSubmit}>Send now</Button>
+            <Button onClick={handleSubmit} className="w-full rounded-full">
+              Send now
+            </Button>
           )}
         </div>
       </div>
