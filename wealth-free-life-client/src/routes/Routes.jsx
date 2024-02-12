@@ -1,7 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
-import Home from "@/pages/Home";
 import App from "@/App";
+import Home from "@/pages/Home";
 import Wallet from "@/pages/Wallet";
+import TradingBot from "@/pages/trading-bot/TradingBot";
+import CustomerInput from "@/pages/trading-bot/CustomerInput";
+import CustomerConfiguration from "@/pages/trading-bot/CustomerConfiguration";
+import Blogs from "@/pages/Blogs";
+import Contact from "@/pages/Contact";
 import Signin from "@/pages/auth/Signin";
 import Signup from "@/pages/auth/Signup";
 
@@ -17,6 +22,32 @@ const router = createBrowserRouter([
       {
         path: "/wallet",
         element: <Wallet />,
+      },
+      {
+        path: "/blogs",
+        element: <Blogs />,
+      },
+      {
+        path: "/contact-us",
+        element: <Contact />,
+      },
+    ],
+  },
+  {
+    path: "/trading-bot",
+    element: <App />,
+    children: [
+      {
+        index: true,
+        element: <TradingBot />,
+      },
+      {
+        path: "customer-input",
+        element: <CustomerInput />,
+      },
+      {
+        path: "customer-configuration",
+        element: <CustomerConfiguration />,
       },
     ],
   },

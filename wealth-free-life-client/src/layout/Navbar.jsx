@@ -25,10 +25,10 @@ const Navbar = () => {
   const navItems = (
     <>
       <Link to="/">Home</Link>
-      <Link to="/trading-bot">Trading Bot</Link>
+      <Link to="/trading-bot/customer-input">Trading Bot</Link>
       <Link to="/market">Market</Link>
       <Link to="/blogs">Blogs</Link>
-      <Link to="/contact">Contact Us</Link>
+      <Link to="/contact-us">Contact Us</Link>
       {user && (
         <Button onClick={handleLogout} variant="link" size="link">
           Signout
@@ -50,7 +50,7 @@ const Navbar = () => {
       {/* left side */}
       <div className="flex items-center gap-3">
         {/* opening button */}
-        <button onClick={() => setIsMenuOpen(true)} className="md:hidden">
+        <button onClick={() => setIsMenuOpen(true)} className="lg:hidden">
           <IoMenu className="size-6" />
         </button>
 
@@ -61,7 +61,7 @@ const Navbar = () => {
         <div
           onClick={() => setIsMenuOpen(false)}
           className={cn(
-            "fixed top-0 left-0 w-full h-full bg-slate-300 bg-opacity-70 backdrop-blur-sm md:hidden",
+            "fixed top-0 left-0 w-full h-full bg-slate-300 bg-opacity-70 backdrop-blur-sm lg:hidden",
             isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
           )}
         ></div>
@@ -69,7 +69,7 @@ const Navbar = () => {
         {/* mobile navigation content */}
         <div
           className={cn(
-            "absolute top-0 left-0 w-1/2 h-screen md:hidden bg-white px-3 py-10 rounded transition-transform ease-in-out duration-300 z-50",
+            "absolute top-0 left-0 w-1/2 h-screen lg:hidden bg-white px-5 py-10 rounded transition-transform ease-in-out duration-300 z-50",
             isMenuOpen ? "translate-x-0" : "-translate-x-full"
           )}
         >
@@ -94,7 +94,7 @@ const Navbar = () => {
       </div>
 
       {/* middle  */}
-      <div className="xs:hidden lg:flex items-center gap-5">{navItems}</div>
+      <div className="max-lg:hidden lg:flex items-center gap-5">{navItems}</div>
 
       {/* right side */}
       {user ? (
