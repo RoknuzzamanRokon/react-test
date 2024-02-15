@@ -25,7 +25,7 @@ const Navbar = () => {
   const navItems = (
     <>
       <Link to="/">Home</Link>
-      <Link to="/trading-bot/customer-input">Trading Bot</Link>
+      {user && <Link to="/trading-bot/customer-input">Trading Bot</Link>}
       <Link to="/market">Market</Link>
       <Link to="/blogs">Blogs</Link>
       <Link to="/contact-us">Contact Us</Link>

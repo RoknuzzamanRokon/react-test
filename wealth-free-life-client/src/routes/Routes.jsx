@@ -10,6 +10,7 @@ import Contact from "@/pages/Contact";
 import Signin from "@/pages/auth/Signin";
 import Signup from "@/pages/auth/Signup";
 import Market from "@/pages/Market";
+import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -44,15 +45,27 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <TradingBot />,
+        element: (
+          <PrivateRoute>
+            <TradingBot />
+          </PrivateRoute>
+        ),
       },
       {
         path: "customer-input",
-        element: <CustomerInput />,
+        element: (
+          <PrivateRoute>
+            <CustomerInput />
+          </PrivateRoute>
+        ),
       },
       {
         path: "customer-configuration",
-        element: <CustomerConfiguration />,
+        element: (
+          <PrivateRoute>
+            <CustomerConfiguration />
+          </PrivateRoute>
+        ),
       },
     ],
   },
