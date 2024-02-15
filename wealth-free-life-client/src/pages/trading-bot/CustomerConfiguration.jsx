@@ -1,15 +1,38 @@
+import { useContext } from "react";
+import { AuthContext } from "@/providers/AuthProvider";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import { Button } from "@/components/ui/button";
 
 const CustomerConfiguration = () => {
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      data = {
+        ...data,
+        customerId: user?.uid,
+      };
+
+      const res = await axios.post(
+        "https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/orderConfiguration",
+        data
+      );
+
+      if (res?.data?.Message === "SUCCESS") {
+        navigate("/trading-bot");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

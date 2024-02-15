@@ -9,6 +9,7 @@ import Blogs from "@/pages/Blogs";
 import Contact from "@/pages/Contact";
 import Signin from "@/pages/auth/Signin";
 import Signup from "@/pages/auth/Signup";
+import Market from "@/pages/Market";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "/contact-us",
         element: <Contact />,
+      },
+      {
+        path: "/market",
+        element: <Market />,
       },
     ],
   },
