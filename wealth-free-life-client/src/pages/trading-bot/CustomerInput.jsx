@@ -1,11 +1,15 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/providers/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import axios from "axios";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { cn } from "@/lib/utils";
 
 const CustomerInput = () => {
+  const [loading, setLoading] = useState(false);
+
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -16,12 +20,14 @@ const CustomerInput = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
+    setLoading(true);
     try {
       data = {
         ...data,
         userName: user?.displayName,
         emailId: user?.email,
         customerId: user?.uid,
+        running_status: "ON",
       };
 
       const res = await axios.post(
@@ -30,6 +36,7 @@ const CustomerInput = () => {
       );
 
       if (res?.data?.Message === "SUCCESS") {
+        setLoading(false);
         navigate("/trading-bot/customer-configuration");
       }
     } catch (error) {
@@ -74,8 +81,14 @@ const CustomerInput = () => {
             )}
           </div>
 
-          <Button type="submit" className="w-full rounded-full">
-            Submit
+          <Button
+            type="submit"
+            className={cn(
+              "w-full rounded-full",
+              loading && buttonVariants({ variant: "loading" })
+            )}
+          >
+            {loading ? <LoadingSpinner /> : "Submit"}
           </Button>
         </form>
       </div>
