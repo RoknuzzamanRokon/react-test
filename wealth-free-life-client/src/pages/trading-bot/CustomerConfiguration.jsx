@@ -21,8 +21,17 @@ const CustomerConfiguration = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
+      let symbol;
+
+      if (data?.product_id === "BTC-USD") {
+        symbol = "BTC";
+      } else if (data?.product_id === "ETH-USD") {
+        symbol = "ETH";
+      }
+
       data = {
         ...data,
+        symbol,
         customerId: user?.uid,
       };
 
@@ -49,21 +58,6 @@ const CustomerConfiguration = () => {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          <div className="flex flex-col">
-            <label>Symbol</label>
-            <select
-              className="outline-none border-b border-black"
-              {...register("symbol", { required: true })}
-            >
-              <option></option>
-              <option value="BTC">BTC</option>
-              <option value="ETH">ETH</option>
-            </select>
-            {errors.symbol && (
-              <span className="text-red-500 text-sm">Symbol is required</span>
-            )}
-          </div>
-
           <div className="flex flex-col">
             <label>USD Size</label>
             <input

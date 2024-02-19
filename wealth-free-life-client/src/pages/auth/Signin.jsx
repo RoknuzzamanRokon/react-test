@@ -4,10 +4,12 @@ import useToast from "@/hooks/useToast";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { cn } from "@/lib/utils";
 
 const Signin = () => {
-  const { signIn } = useContext(AuthContext);
+  const { signIn, loading, setLoading } = useContext(AuthContext);
   const { showToast } = useToast();
 
   const navigate = useNavigate();
@@ -26,11 +28,13 @@ const Signin = () => {
 
     signIn(email, password)
       .then(() => {
+        setLoading(false);
         navigate(from, { replace: true });
         showToast("SignIn successful!");
         reset();
       })
       .catch((err) => {
+        setLoading(false);
         showToast(err.message);
         console.error(err);
       });
@@ -71,8 +75,14 @@ const Signin = () => {
             )}
           </div>
 
-          <Button type="submit" className="w-full rounded-full">
-            Signin
+          <Button
+            type="submit"
+            className={cn(
+              "w-full rounded-full",
+              loading && buttonVariants({ variant: "loading" })
+            )}
+          >
+            {loading ? <LoadingSpinner /> : "Signin"}
           </Button>
         </form>
 

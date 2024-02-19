@@ -1,13 +1,18 @@
+import { useContext } from "react";
+import { AuthContext } from "@/providers/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { Button } from "@/components/ui/button";
 
 const TradingBot = () => {
+  const { user } = useContext(AuthContext);
+
   const { isLoading, error, data } = useQuery({
     queryKey: ["tradingData"],
     queryFn: () =>
       axios
         .get(
-          "https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/botOutput?display_id=1"
+          `https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/botOutput?display_id=${user?.uid}`
         )
         .then((res) => res.data),
 
@@ -28,7 +33,22 @@ const TradingBot = () => {
       </div>
     );
 
-  console.log(data);
+  const stopBot = async () => {
+    try {
+      const data = {
+        customerId: user?.uid,
+        updateKey: "running_status",
+        updateValue: "OFF",
+      };
+
+      await axios.patch(
+        "https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/customer",
+        data
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <main className="section-wrapper">
@@ -62,6 +82,10 @@ const TradingBot = () => {
           <p>Closing Price Result</p>
           <h5>{data?.closing_price_result}</h5>
         </div>
+      </div>
+
+      <div className="mt-5">
+        <Button onClick={stopBot}>Stop Bot</Button>
       </div>
     </main>
   );
