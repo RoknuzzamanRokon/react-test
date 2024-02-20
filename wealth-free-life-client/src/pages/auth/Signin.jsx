@@ -27,7 +27,9 @@ const Signin = () => {
     const { email, password } = data;
 
     signIn(email, password)
-      .then(() => {
+      .then((res) => {
+        localStorage.setItem("userId", res?.user?.uid);
+
         setLoading(false);
         navigate(from, { replace: true });
         showToast("SignIn successful!");

@@ -7,9 +7,12 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
+  const userId = localStorage.getItem("userId");
   const { showToast } = useToast();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,39 +27,52 @@ const Navbar = () => {
       });
   };
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["isSubmittedValue"],
     queryFn: () =>
       axios
         .get(
-          `https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/customer/customerItem?customerId=EhDBAkWZApNRwMQDMyETnzl4EGK2&attributeToSearch=isSubmitted`
+          `https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/customer/customerItem?customerId=${userId}&attributeToSearch=isSubmitted`
         )
         .then((res) => res.data),
   });
 
   const navItems = (
     <>
-      <Link to="/">Home</Link>
+      {isLoading ? (
+        <div className="lg:flex lg:justify-between lg:gap-5">
+          <Skeleton className="w-[200px] lg:w-[70px]" />
+          <Skeleton className="w-[200px] lg:w-[70px]" />
+          <Skeleton className="w-[200px] lg:w-[70px]" />
+          <Skeleton className="w-[200px] lg:w-[70px]" />
+          <Skeleton className="w-[200px] lg:w-[70px]" />
+          <Skeleton className="w-[200px] lg:w-[70px]" />
+        </div>
+      ) : (
+        <>
+          <Link to="/">Home</Link>
 
-      {user && data === true && (
-        <Link to="/trading-bot/customer-configuration">Trading Bot</Link>
-      )}
+          {user && data ? (
+            <Link to="/trading-bot/customer-configuration">Trading Bot</Link>
+          ) : (
+            <Link to="/trading-bot/customer-input">Trading Bot</Link>
+          )}
 
-      {user && data === !true && (
-        <Link to="/trading-bot/customer-input">Trading Bot</Link>
-      )}
+          <Link to="/market">Market</Link>
+          <Link to="/blogs">Blogs</Link>
+          <Link to="/contact-us">Contact Us</Link>
 
-      <Link to="/market">Market</Link>
-      <Link to="/blogs">Blogs</Link>
-      <Link to="/contact-us">Contact Us</Link>
-      {user && (
-        <Button onClick={handleLogout} variant="link" size="link">
-          Signout
-        </Button>
+          {user && (
+            <Button onClick={handleLogout} variant="link" size="link">
+              Signout
+            </Button>
+          )}
+        </>
       )}
     </>
   );
 
+  // stop scrolling when nav is open on small devices
   useEffect(() => {
     if (isMenuOpen) {
       document.body.classList.add("no-scroll");

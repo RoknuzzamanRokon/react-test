@@ -27,7 +27,9 @@ const Signup = () => {
     const { userName, email, password } = data;
 
     createUser(email, password)
-      .then(() => {
+      .then((res) => {
+        localStorage.setItem("userId", res?.user?.uid);
+
         setLoading(false);
         updateUserProfile(userName);
         navigate(from, { replace: true });
