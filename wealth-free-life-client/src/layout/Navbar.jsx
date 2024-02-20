@@ -5,6 +5,8 @@ import { IoMenu, IoClose } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -22,10 +24,28 @@ const Navbar = () => {
       });
   };
 
+  const { data } = useQuery({
+    queryKey: ["isSubmittedValue"],
+    queryFn: () =>
+      axios
+        .get(
+          `https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/customer/customerItem?customerId=EhDBAkWZApNRwMQDMyETnzl4EGK2&attributeToSearch=isSubmitted`
+        )
+        .then((res) => res.data),
+  });
+
   const navItems = (
     <>
       <Link to="/">Home</Link>
-      {user && <Link to="/trading-bot/customer-input">Trading Bot</Link>}
+
+      {user && data === true && (
+        <Link to="/trading-bot/customer-configuration">Trading Bot</Link>
+      )}
+
+      {user && data === !true && (
+        <Link to="/trading-bot/customer-input">Trading Bot</Link>
+      )}
+
       <Link to="/market">Market</Link>
       <Link to="/blogs">Blogs</Link>
       <Link to="/contact-us">Contact Us</Link>

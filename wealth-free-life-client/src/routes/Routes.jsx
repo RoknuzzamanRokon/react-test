@@ -11,6 +11,7 @@ import Signin from "@/pages/auth/Signin";
 import Signup from "@/pages/auth/Signup";
 import Market from "@/pages/Market";
 import PrivateRoute from "./PrivateRoute";
+import ProtectedRoute from "./ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -23,7 +24,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/wallet",
-        element: <Wallet />,
+        element: (
+          <PrivateRoute>
+            <Wallet />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/blogs",

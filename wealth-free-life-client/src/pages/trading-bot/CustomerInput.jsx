@@ -28,6 +28,7 @@ const CustomerInput = () => {
         emailId: user?.email,
         customerId: user?.uid,
         running_status: "ON",
+        isSubmitted: true,
       };
 
       const res = await axios.post(
