@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 
 const CustomerConfiguration = () => {
   const [loading, setLoading] = useState(false);
+
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -79,6 +80,8 @@ const CustomerConfiguration = () => {
               <option></option>
               <option value="BTC-USD">BTC-USD</option>
               <option value="ETH-USD">ETH-USD</option>
+              <option value="BTC-EUR">BTC-EUR</option>
+              <option value="ETH-EUR">ETH-EUR</option>
             </select>
             {errors.product_id && (
               <span className="text-red-500 text-sm">
