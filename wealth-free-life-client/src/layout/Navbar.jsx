@@ -28,9 +28,9 @@ const Navbar = () => {
       });
   };
 
-  const { data: CustomerInputData, isLoading: CustomerInputIsLoading } =
-    useQuery({
-      queryKey: ["isSubmittedValue"],
+  const { data: customerInputData, isLoading: customerInputLoading } = useQuery(
+    {
+      queryKey: ["inputSubmittedValue"],
       queryFn: () =>
         axios
           .get(
@@ -39,11 +39,12 @@ const Navbar = () => {
           .then((res) => res.data),
 
       refetchInterval: user ? 1000 : false,
-    });
+    }
+  );
 
-  const { data: CustomerConfigData, isLoading: CustomerConfigIsLoading } =
+  const { data: customerConfigData, isLoading: customerConfigLoading } =
     useQuery({
-      queryKey: ["isSubmittedValue"],
+      queryKey: ["configSubmittedValue"],
       queryFn: () =>
         axios
           .get(
@@ -51,12 +52,12 @@ const Navbar = () => {
           )
           .then((res) => res.data),
 
-      refetchInterval: user ? 1000 : false,
+      refetchInterval: user && customerInputData ? 1000 : false,
     });
 
   const navItems = (
     <>
-      {user && CustomerInputIsLoading && CustomerConfigIsLoading ? (
+      {user && customerInputLoading && customerConfigLoading ? (
         <div className="lg:flex lg:justify-between lg:gap-5">
           <Skeleton className="w-[200px] lg:w-[70px]" />
           <Skeleton className="w-[200px] lg:w-[70px]" />
@@ -69,15 +70,14 @@ const Navbar = () => {
         <>
           <Link to="/">Home</Link>
 
-          {user && CustomerInputData && CustomerConfigData ? (
+          {user && customerInputData && customerConfigData ? (
             <Link to="/trading-bot">Trading Bot</Link>
+          ) : user && customerInputData ? (
+            <Link to="/trading-bot/customer-input">Trading Bot</Link>
           ) : user ? (
             <Link to="/trading-bot/customer-input">Trading Bot</Link>
           ) : (
-            user &&
-            CustomerInputData(
-              <Link to="/trading-bot/customer-input">Trading Bot</Link>
-            )
+            <></>
           )}
 
           <Link to="/market">Market</Link>
