@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import axios from "axios";
 
 const Signup = () => {
   const { createUser, updateUserProfile, loading, setLoading } =
@@ -24,14 +25,31 @@ const Signup = () => {
   } = useForm();
 
   const onSubmit = (data) => {
+    let postData;
     const { userName, email, password } = data;
 
     createUser(email, password)
       .then((res) => {
         localStorage.setItem("userId", res?.user?.uid);
-
         setLoading(false);
         updateUserProfile(userName);
+
+        postData = {
+          userName: userName,
+          emailId: res?.user?.email,
+          customerId: res?.user?.uid,
+
+          running_status: "OFF",
+          isSubmitted: false,
+          apiKey: "",
+          apiSecret: "",
+        };
+
+        axios.post(
+          "https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/customer",
+          postData
+        );
+
         navigate(from, { replace: true });
         showToast("Signup successful!");
         reset();

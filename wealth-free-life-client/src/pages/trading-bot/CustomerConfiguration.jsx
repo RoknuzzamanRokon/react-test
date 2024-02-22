@@ -24,9 +24,9 @@ const CustomerConfiguration = () => {
     try {
       let symbol;
 
-      if (data?.product_id === "BTC-USD") {
+      if (data?.product_id === "BTC-USD" || "BTC-EUR") {
         symbol = "BTC";
-      } else if (data?.product_id === "ETH-USD") {
+      } else if (data?.product_id === "ETH-USD" || "ETH-EUR") {
         symbol = "ETH";
       }
 
@@ -34,14 +34,26 @@ const CustomerConfiguration = () => {
         ...data,
         symbol,
         customerId: user?.uid,
+        isSubmitted: true,
       };
 
-      const res = await axios.post(
+      const updateData = {
+        customerId: user?.uid,
+        updateKey: "running_status",
+        updateValue: "ON",
+      };
+
+      const postRes = await axios.post(
         "https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/orderConfiguration",
         data
       );
 
-      if (res?.data?.Message === "SUCCESS") {
+      const updateRes = await axios.patch(
+        "https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/customer",
+        updateData
+      );
+
+      if (postRes?.data?.Message && updateRes?.data?.Message === "SUCCESS") {
         setLoading(false);
         navigate("/trading-bot");
       }

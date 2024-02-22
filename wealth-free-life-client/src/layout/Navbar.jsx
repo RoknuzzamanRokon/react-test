@@ -11,11 +11,11 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const Navbar = () => {
-  const { user, logOut } = useContext(AuthContext);
   const userId = localStorage.getItem("userId");
-  const { showToast } = useToast();
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const { user, logOut } = useContext(AuthContext);
+  const { showToast } = useToast();
 
   const handleLogout = () => {
     logOut()
@@ -28,20 +28,35 @@ const Navbar = () => {
       });
   };
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["isSubmittedValue"],
-    queryFn: () =>
-      axios
-        .get(
-          `https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/customer/customerItem?customerId=${userId}&attributeToSearch=isSubmitted`
-        )
-        .then((res) => res.data),
-    // refetchInterval: user ? 1000 : false,
-  });
+  const { data: CustomerInputData, isLoading: CustomerInputIsLoading } =
+    useQuery({
+      queryKey: ["isSubmittedValue"],
+      queryFn: () =>
+        axios
+          .get(
+            `https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/customer/customerItem?customerId=${userId}&attributeToSearch=isSubmitted`
+          )
+          .then((res) => res.data),
+
+      refetchInterval: user ? 1000 : false,
+    });
+
+  const { data: CustomerConfigData, isLoading: CustomerConfigIsLoading } =
+    useQuery({
+      queryKey: ["isSubmittedValue"],
+      queryFn: () =>
+        axios
+          .get(
+            `https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/orderConfiguration?customerId=${userId}&attributeToSearch=isSubmitted`
+          )
+          .then((res) => res.data),
+
+      refetchInterval: user ? 1000 : false,
+    });
 
   const navItems = (
     <>
-      {user && isLoading ? (
+      {user && CustomerInputIsLoading && CustomerConfigIsLoading ? (
         <div className="lg:flex lg:justify-between lg:gap-5">
           <Skeleton className="w-[200px] lg:w-[70px]" />
           <Skeleton className="w-[200px] lg:w-[70px]" />
@@ -54,12 +69,15 @@ const Navbar = () => {
         <>
           <Link to="/">Home</Link>
 
-          {user && data ? (
-            <Link to="/trading-bot/customer-configuration">Trading Bot</Link>
+          {user && CustomerInputData && CustomerConfigData ? (
+            <Link to="/trading-bot">Trading Bot</Link>
           ) : user ? (
             <Link to="/trading-bot/customer-input">Trading Bot</Link>
           ) : (
-            <></>
+            user &&
+            CustomerInputData(
+              <Link to="/trading-bot/customer-input">Trading Bot</Link>
+            )
           )}
 
           <Link to="/market">Market</Link>
