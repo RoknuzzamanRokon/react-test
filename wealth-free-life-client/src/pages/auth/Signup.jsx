@@ -41,8 +41,8 @@ const Signup = () => {
 
           running_status: "OFF",
           isSubmitted: false,
-          apiKey: "",
-          apiSecret: "",
+          apiKey: "a",
+          apiSecret: "a",
         };
 
         axios.post(

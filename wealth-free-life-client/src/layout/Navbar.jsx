@@ -9,8 +9,12 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useAccount, useDisconnect } from "wagmi";
 
 const Navbar = () => {
+  const { disconnect } = useDisconnect();
+  const { address } = useAccount();
+
   const userId = localStorage.getItem("userId");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -58,7 +62,7 @@ const Navbar = () => {
   const navItems = (
     <>
       {user && customerInputLoading && customerConfigLoading ? (
-        <div className="lg:flex lg:justify-between lg:gap-5">
+        <div className="lg:flex justify-between gap-5">
           <Skeleton className="w-[200px] lg:w-[70px]" />
           <Skeleton className="w-[200px] lg:w-[70px]" />
           <Skeleton className="w-[200px] lg:w-[70px]" />
@@ -155,7 +159,11 @@ const Navbar = () => {
       <div className="max-lg:hidden lg:flex items-center gap-5">{navItems}</div>
 
       {/* right side */}
-      {user ? (
+      {user && address ? (
+        <Button onClick={() => disconnect()} className="rounded-full">
+          Disconnect Wallet
+        </Button>
+      ) : user ? (
         <Link to="/wallet">
           <Button className="rounded-full">Wallet</Button>
         </Link>

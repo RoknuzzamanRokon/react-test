@@ -33,6 +33,7 @@ const CustomerConfiguration = () => {
       data = {
         ...data,
         symbol,
+        max_sell: data?.max_buy,
         customerId: user?.uid,
         isSubmitted: true,
       };
@@ -72,19 +73,21 @@ const CustomerConfiguration = () => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div className="flex flex-col">
-            <label>USD Size</label>
+            <label>How much money do you want to per trade?</label>
             <input
               type="number"
               className="outline-none border-b border-black"
               {...register("usd_size", { required: true })}
             />
             {errors.usd_size && (
-              <span className="text-red-500 text-sm">USD Size is required</span>
+              <span className="text-red-500 text-sm">
+                Trade Amount is required
+              </span>
             )}
           </div>
 
           <div className="flex flex-col">
-            <label>Product Id</label>
+            <label>Convert Coin</label>
             <select
               className="outline-none border-b border-black"
               {...register("product_id", { required: true })}
@@ -97,43 +100,41 @@ const CustomerConfiguration = () => {
             </select>
             {errors.product_id && (
               <span className="text-red-500 text-sm">
-                Product Id is required
+                Convert Coin is required
               </span>
             )}
           </div>
 
           <div className="flex flex-col">
-            <label>Max Buy</label>
+            <label>Buy Sell Quantity</label>
             <input
               type="number"
               className="outline-none border-b border-black"
               {...register("max_buy", { required: true })}
             />
             {errors.max_buy && (
-              <span className="text-red-500 text-sm">Max Buy is required</span>
+              <span className="text-red-500 text-sm">
+                Buy Sell Quantity is required
+              </span>
             )}
           </div>
 
           <div className="flex flex-col">
-            <label>Max Sell</label>
-            <input
-              type="number"
-              className="outline-none border-b border-black"
-              {...register("max_sell", { required: true })}
-            />
-            {errors.max_sell && (
-              <span className="text-red-500 text-sm">Max Sell is required</span>
-            )}
-          </div>
-
-          <div className="flex flex-col">
-            <label>Profit Percentage</label>
-            <input
-              type="number"
-              step="0.01"
+            <label>
+              Want to buy at what percentage profit from the current price?
+            </label>
+            <select
               className="outline-none border-b border-black"
               {...register("PROFIT_PERCENTAGE", { required: true })}
-            />
+            >
+              <option></option>
+              <option value="0.70">0.70</option>
+              <option value="0.75">0.75</option>
+              <option value="0.90">0.90</option>
+              <option value="1.0">1.0</option>
+              <option value="1.25">1.25</option>
+              <option value="1.50">1.50</option>
+            </select>
             {errors.PROFIT_PERCENTAGE && (
               <span className="text-red-500 text-sm">
                 Profit Percentage is required
@@ -142,13 +143,21 @@ const CustomerConfiguration = () => {
           </div>
 
           <div className="flex flex-col">
-            <label>Loss Percentage</label>
-            <input
-              type="number"
-              step="0.01"
+            <label>
+              How much percentage less than the current price want to buy?
+            </label>
+            <select
               className="outline-none border-b border-black"
               {...register("LOSS_PERCENTAGE", { required: true })}
-            />
+            >
+              <option></option>
+              <option value="0.70">0.70</option>
+              <option value="0.75">0.75</option>
+              <option value="0.90">0.90</option>
+              <option value="1.0">1.0</option>
+              <option value="1.25">1.25</option>
+              <option value="1.50">1.50</option>
+            </select>
             {errors.LOSS_PERCENTAGE && (
               <span className="text-red-500 text-sm">
                 Loss Percentage is required

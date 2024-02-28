@@ -1,31 +1,30 @@
-import { useContext } from "react";
-import { TransactionContext } from "@/providers/TransactionProvider";
+import { useConnect, useAccount, useBalance, useSendTransaction } from "wagmi";
+import { injected } from "wagmi/connectors";
 import { AiFillPlayCircle } from "react-icons/ai";
 import { SiEthereum } from "react-icons/si";
 import { BsInfoCircle } from "react-icons/bs";
 import { Button } from "@/components/ui/button";
 import { shortenAddress } from "@/utils/shortenAddress";
-import Loader from "@/components/Loader";
-import Input from "@/components/Input";
+import { useForm } from "react-hook-form";
+import { parseEther } from "viem";
 
 const Wallet = () => {
+  const { connect } = useConnect();
+  const { address } = useAccount();
+  const { data: balanceData } = useBalance({ address });
+
   const {
-    currentAccount,
-    connectWallet,
-    handleChange,
-    sendTransaction,
-    formData,
-    isLoading,
-  } = useContext(TransactionContext);
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const handleSubmit = (e) => {
-    const { addressTo, amount, message } = formData;
+  const { data: hash, sendTransaction } = useSendTransaction();
 
-    e.preventDefault();
-
-    if (!addressTo || !amount || !message) return;
-
-    sendTransaction();
+  const onSubmit = (data) => {
+    // Destructure address and value from the form data
+    const { address, value } = data;
+    sendTransaction({ to: address, value: parseEther(value) });
   };
 
   const features = [
@@ -53,8 +52,11 @@ const Wallet = () => {
         </div>
 
         {/* second row */}
-        {!currentAccount && (
-          <Button onClick={connectWallet} className="flex items-center gap-1">
+        {!address && (
+          <Button
+            onClick={() => connect({ connector: injected() })}
+            className="flex items-center gap-1"
+          >
             <AiFillPlayCircle />
             Connect Wallet
           </Button>
@@ -86,49 +88,63 @@ const Wallet = () => {
           </div>
 
           {/* second row */}
-          <div>
-            <p className="font-light text-sm">
-              {shortenAddress(currentAccount)}
-            </p>
-            <p className="font-semibold text-lg">Ethereum</p>
+          <div className="flex justify-between items-center">
+            <div>
+              {address && (
+                <p className="font-normal text-sm">{shortenAddress(address)}</p>
+              )}
+              <p className="font-semibold text-lg">Ethereum</p>
+            </div>
+
+            <div className="text-right">
+              <p className="font-semibold text-lg">Balance</p>
+              {address && (
+                <p className="font-normal text-sm">
+                  {parseFloat(balanceData?.formatted).toFixed(4)}
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
         {/* second row */}
-        <div className="w-full sm:w-[70%] p-5 flex flex-col items-center shadow-md rounded-md border space-y-3">
-          <Input
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="w-full sm:w-[70%] p-5 flex flex-col items-center shadow-md rounded-md border space-y-3"
+        >
+          <input
+            name="address"
+            type="text"
             placeholder="Address To"
-            name="addressTo"
-            type="text"
-            handleChange={handleChange}
+            className="w-full rounded-md px-3 py-1 outline-none border"
+            {...register("address", { required: "Address is required" })}
           />
-          <Input
-            placeholder="Amount (ETH)"
-            name="amount"
-            type="number"
-            handleChange={handleChange}
-          />
-          <Input
-            placeholder="Keyword (Gif)"
-            name="keyword"
-            type="text"
-            handleChange={handleChange}
-          />
-          <Input
-            placeholder="Enter Message"
-            name="message"
-            type="text"
-            handleChange={handleChange}
-          />
-
-          {isLoading ? (
-            <Loader />
-          ) : (
-            <Button onClick={handleSubmit} className="w-full rounded-full">
-              Send now
-            </Button>
+          {errors?.address && (
+            <span className="text-red-500 text-sm">
+              {errors?.address?.message}
+            </span>
           )}
-        </div>
+
+          <input
+            name="value"
+            type="number"
+            step="0.0001"
+            placeholder="Amount (ETH)"
+            className="w-full rounded-md px-3 py-1 outline-none border"
+            {...register("value", { required: "Value is required" })}
+          />
+          {errors?.value && (
+            <span className="text-red-500 text-sm">
+              {errors?.value?.message}
+            </span>
+          )}
+
+          <Button type="submit" className="w-full rounded-full">
+            Send now
+          </Button>
+
+          {hash && <div>Transaction Hash: {hash}</div>}
+        </form>
       </div>
     </main>
   );

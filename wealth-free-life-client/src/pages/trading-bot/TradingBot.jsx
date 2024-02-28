@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "@/providers/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -8,11 +8,14 @@ import Skeleton from "react-loading-skeleton";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
+import useToast from "@/hooks/useToast";
+import notificationSound from "../../assets/audio/notification.mp3";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const TradingBot = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useContext(AuthContext);
+  const { showToast } = useToast();
 
   const {
     data: runningStatusData,
@@ -55,6 +58,23 @@ const TradingBot = () => {
         .then((res) => res.data),
     refetchInterval: runningStatusData === "ON" ? 1000 : false,
   });
+
+  // Function to handle showing the popup message and playing the sound
+  const handleBuyStatus = () => {
+    if (botCounterData?.last_buySell_status === "Buy") {
+      // Show toast notification
+      showToast("Buy Sell Status Detected!");
+
+      // Play sound
+      const audio = new Audio(notificationSound);
+      audio.play();
+    }
+  };
+
+  // Call handleBuyStatus whenever botCounterData updates
+  useEffect(() => {
+    handleBuyStatus();
+  }, [botCounterData]);
 
   const startBot = async () => {
     setLoading(true);
@@ -126,28 +146,33 @@ const TradingBot = () => {
         ) : (
           <>
             <DisplayTradingData
+              title="Closing Price"
+              value={tradingData?.closing_price_result}
+            />
+
+            <DisplayTradingData
               title="Update Price"
               value={tradingData?.update_price_result}
             />
-            <DisplayTradingData
-              title="Trade Sell Amount"
-              value={tradingData?.trade_sell_amount}
-            />
-            <DisplayTradingData
-              title="RSI Value"
-              value={tradingData?.rsi_value}
-            />
+
             <DisplayTradingData
               title="Average Price"
               value={tradingData?.moving_average_price}
             />
+
+            <DisplayTradingData
+              title="Trade Sell Amount"
+              value={tradingData?.trade_sell_amount}
+            />
+
             <DisplayTradingData
               title="Trade Buy Amount"
               value={tradingData?.trade_buy_amount}
             />
+
             <DisplayTradingData
-              title="Closing Price Result"
-              value={tradingData?.closing_price_result}
+              title="RSI Value"
+              value={tradingData?.rsi_value}
             />
           </>
         )}
@@ -199,9 +224,18 @@ const TradingBot = () => {
           </div>
         ) : (
           <div className="p-5 rounded-md shadow-md border w-fit">
-            <p>Total Buy: {botCounterData?.total_buy}</p>
-            <p>Total Sell: {botCounterData?.total_sell}</p>
-            <p>Buy Sell Status: {botCounterData?.last_buySell_status}</p>
+            <p>
+              <span className="font-semibold">Total Buy:</span>{" "}
+              {botCounterData?.total_buy}
+            </p>
+            <p>
+              <span className="font-semibold">Total Sell:</span>{" "}
+              {botCounterData?.total_sell}
+            </p>
+            <p>
+              <span className="font-semibold">Buy Sell Status:</span>{" "}
+              {botCounterData?.last_buySell_status}
+            </p>
           </div>
         )}
       </div>
