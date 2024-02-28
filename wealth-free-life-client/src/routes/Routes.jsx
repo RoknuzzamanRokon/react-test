@@ -12,6 +12,7 @@ import Signup from "@/pages/auth/Signup";
 import Market from "@/pages/Market";
 import PrivateRoute from "./PrivateRoute";
 import ProtectedRoute from "./ProtectedRoute";
+import NFTs from "@/pages/NFTs";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <Wallet />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/nfts",
+        element: (
+          <PrivateRoute>
+            <NFTs />
           </PrivateRoute>
         ),
       },

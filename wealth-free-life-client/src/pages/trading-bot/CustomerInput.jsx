@@ -6,16 +6,18 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import axios from "axios";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { cn } from "@/lib/utils";
+import useToast from "@/hooks/useToast";
 
 const CustomerInput = () => {
-  const [loading, setLoading] = useState(false);
-
+  const { showToast } = useToast();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -41,6 +43,9 @@ const CustomerInput = () => {
         navigate("/trading-bot/customer-configuration");
       }
     } catch (error) {
+      setLoading(false);
+      showToast("Invalid Api secret or key!");
+      reset();
       console.log(error);
     }
   };

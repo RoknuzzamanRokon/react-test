@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/providers/AuthProvider";
 import useToast from "@/hooks/useToast";
 import { IoMenu, IoClose } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import axios from "axios";
@@ -12,14 +12,14 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { useAccount, useDisconnect } from "wagmi";
 
 const Navbar = () => {
+  const { user, logOut } = useContext(AuthContext);
+  const { showToast } = useToast();
   const { disconnect } = useDisconnect();
   const { address } = useAccount();
+  const { pathname } = useLocation();
 
   const userId = localStorage.getItem("userId");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const { user, logOut } = useContext(AuthContext);
-  const { showToast } = useToast();
 
   const handleLogout = () => {
     logOut()
@@ -83,6 +83,8 @@ const Navbar = () => {
           ) : (
             <></>
           )}
+
+          {user && address && <Link to="/nfts">NFTs</Link>}
 
           <Link to="/market">Market</Link>
           <Link to="/blogs">Blogs</Link>
@@ -159,7 +161,7 @@ const Navbar = () => {
       <div className="max-lg:hidden lg:flex items-center gap-5">{navItems}</div>
 
       {/* right side */}
-      {user && address ? (
+      {pathname === "/wallet" && user && address ? (
         <Button onClick={() => disconnect()} className="rounded-full">
           Disconnect Wallet
         </Button>
