@@ -11,15 +11,14 @@ import { parseEther } from "viem";
 const Wallet = () => {
   const { connect } = useConnect();
   const { address } = useAccount();
-  const { data: balanceData } = useBalance({ address });
+  const { data: balance } = useBalance({ address });
+  const { data: hash, sendTransaction } = useSendTransaction();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
-  const { data: hash, sendTransaction } = useSendTransaction();
 
   const onSubmit = (data) => {
     // Destructure address and value from the form data
@@ -97,12 +96,12 @@ const Wallet = () => {
             </div>
 
             <div className="text-right">
-              <p className="font-semibold text-lg">Balance</p>
               {address && (
-                <p className="font-normal text-sm">
-                  {parseFloat(balanceData?.formatted).toFixed(4)}
+                <p className="font-semibold text-lg">
+                  {parseFloat(balance?.formatted).toFixed(4)}
                 </p>
               )}
+              <p className="font-normal text-sm">Balance</p>
             </div>
           </div>
         </div>

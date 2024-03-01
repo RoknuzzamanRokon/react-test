@@ -9,15 +9,14 @@ import { cn } from "@/lib/utils";
 import useToast from "@/hooks/useToast";
 
 const CustomerInput = () => {
-  const { showToast } = useToast();
   const { user } = useContext(AuthContext);
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm();
 
@@ -41,11 +40,13 @@ const CustomerInput = () => {
       if (res?.data?.Message === "SUCCESS") {
         setLoading(false);
         navigate("/trading-bot/customer-configuration");
+      } else {
+        setLoading(false);
+        showToast("Network Error!");
       }
     } catch (error) {
       setLoading(false);
-      showToast("Invalid Api secret or key!");
-      reset();
+      showToast("Invalid Api key or secret!");
       console.log(error);
     }
   };
@@ -60,6 +61,19 @@ const CustomerInput = () => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div className="flex flex-col">
+            <label className="font-medium">Api Key</label>
+            <input
+              type="text"
+              className="outline-none border-b border-black"
+              {...register("apiKey", { required: true })}
+            />
+
+            {errors.apiKey && (
+              <span className="text-red-500  text-sm">Api Key is required</span>
+            )}
+          </div>
+
+          <div className="flex flex-col">
             <label className="font-medium">Api Secret</label>
             <input
               type="text"
@@ -71,19 +85,6 @@ const CustomerInput = () => {
               <span className="text-red-500  text-sm">
                 Api Secret is required
               </span>
-            )}
-          </div>
-
-          <div className="flex flex-col">
-            <label className="font-medium">Api Key</label>
-            <input
-              type="text"
-              className="outline-none border-b border-black"
-              {...register("apiKey", { required: true })}
-            />
-
-            {errors.apiKey && (
-              <span className="text-red-500  text-sm">Api Key is required</span>
             )}
           </div>
 

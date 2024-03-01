@@ -13,9 +13,9 @@ import notificationSound from "../../assets/audio/notification.mp3";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const TradingBot = () => {
-  const [loading, setLoading] = useState(false);
   const { user } = useContext(AuthContext);
   const { showToast } = useToast();
+  const [loading, setLoading] = useState(false);
 
   const {
     data: runningStatusData,
@@ -27,7 +27,7 @@ const TradingBot = () => {
     queryFn: async () =>
       await axios
         .get(
-          `https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/customer/customerItem?customerId=${user?.uid}&attributeToSearch=running_status`
+          `https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/validCustomer/validCustomerItem?customerId=${user?.uid}&attributeToSearch=running_status`
         )
         .then((res) => res.data),
   });
@@ -86,7 +86,7 @@ const TradingBot = () => {
       };
 
       const res = await axios.patch(
-        "https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/customer",
+        `https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/validCustomer?customerId=${user?.uid}`,
         data
       );
       if (res?.data?.Message === "SUCCESS") {
@@ -109,7 +109,7 @@ const TradingBot = () => {
       };
 
       const res = await axios.patch(
-        "https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/customer",
+        `https://zyv0q9hl1g.execute-api.us-east-2.amazonaws.com/config-stage/validCustomer?customerId=${user?.uid}`,
         data
       );
       if (res?.data?.Message === "SUCCESS") {
